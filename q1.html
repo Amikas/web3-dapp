@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Q1: Block Height</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.11.1/ethers.umd.min.js"></script>
+</head>
+<body style="font-family: Arial; padding: 20px;">
+    <h2>Question 1: Sepolia Block Height</h2>
+    <button onclick="getBlockHeight()">Get Current Block Height</button>
+    <p id="result"></p>
+
+    <script>
+        async function getBlockHeight() {
+            if (!window.ethereum) return alert("Please install MetaMask!");
+            try {
+                document.getElementById("result").innerText = "Fetching...";
+                const provider = new ethers.BrowserProvider(window.ethereum);
+                const blockNumber = await provider.getBlockNumber();
+                document.getElementById("result").innerText = "Current Block Height: " + blockNumber;
+            } catch (error) {
+                document.getElementById("result").innerText = "Error: " + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Q2: Token Balance</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.11.1/ethers.umd.min.js"></script>
+</head>
+<body style="font-family: Arial; padding: 20px;">
+    <h2>Question 2: ERC20 Balance</h2>
+    <button onclick="getBalance()">Get My Balance</button>
+    <p id="result"></p>
+
+    <script>
+        const contractAddress = "0x9cCDfc97032DC712E000A261FEd06828c8935136"; 
+        const abi = ["function balanceOf(address owner) view returns (uint256)"];
+
+        async function getBalance() {
+            if (!window.ethereum) return alert("Please install MetaMask!");
+            try {
+                document.getElementById("result").innerText = "Fetching...";
+                const provider = new ethers.BrowserProvider(window.ethereum);
+                const signer = await provider.getSigner();
+                const userAddress = await signer.getAddress();
+                
+                const contract = new ethers.Contract(contractAddress, abi, signer);
+                const rawBalance = await contract.balanceOf(userAddress);
+                const formattedBalance = ethers.formatUnits(rawBalance, 18);
+                
+                document.getElementById("result").innerText = `Balance: ${formattedBalance} Tokens`;
+            } catch (error) {
+                document.getElementById("result").innerText = "Error: " + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

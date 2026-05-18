@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Q3: Transfer Tokens</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.11.1/ethers.umd.min.js"></script>
+</head>
+<body style="font-family: Arial; padding: 20px;">
+    <h2>Question 3: Transfer 10 Tokens</h2>
+    <button onclick="transferTokens()">Transfer Now</button>
+    <p id="result"></p>
+
+    <script>
+        const contractAddress = "0x9cCDfc97032DC712E000A261FEd06828c8935136"; 
+        const abi = ["function transfer(address to, uint256 amount) returns (bool)"];
+
+        async function transferTokens() {
+            if (!window.ethereum) return alert("Please install MetaMask!");
+            try {
+                document.getElementById("result").innerText = "Waiting for approval in MetaMask...";
+                const provider = new ethers.BrowserProvider(window.ethereum);
+                const signer = await provider.getSigner();
+                
+                const contract = new ethers.Contract(contractAddress, abi, signer);
+                const recipient = "0x15433DA387451F9dE4565280C85506CB71aF9376";
+                const amount = ethers.parseUnits("10", 18); 
+                
+                const tx = await contract.transfer(recipient, amount);
+                document.getElementById("result").innerText = "Tx sent! Waiting for confirmation... Hash: " + tx.hash;
+                
+                await tx.wait();
+                document.getElementById("result").innerText = "Success! Confirmed. Hash: " + tx.hash;
+            } catch (error) {
+                document.getElementById("result").innerText = "Error: " + (error.reason || error.message);
+            }
+        }
+    </script>
+</body>
+</html>
